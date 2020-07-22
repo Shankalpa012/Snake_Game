@@ -18,6 +18,23 @@ ground.src="img/ground.png";
 const foodImg = new Image();
 foodImg.src="img/food.png";
 
+//loading the audio
+
+const dead= new Audio();
+dead.src="audio/dead.mp3";
+const eat= new Audio();
+eat.src="audio/eat.mp3";
+const up= new Audio();
+up.src="audio/up.mp3";
+const down= new Audio();
+down.src="audio/down.mp3";
+const left= new Audio();
+left.src="audio/left.mp3";
+const right= new Audio();
+right.src="audio/right.mp3";
+
+
+
 //creating a Snake
 
 let snake=[];
@@ -36,8 +53,6 @@ let food={
 //score value
 
 let score=0;
-let bestScore=0;
-
 
 //controlling the snake with arrows keys
 document.addEventListener("keydown",direction);
@@ -48,12 +63,16 @@ let d;
 //function to check the keypressed
 function direction(e){
     if(e.keyCode==37 && d !="RIGHT"){
+      left.play();  
       d="LEFT"  
     }else if(e.keyCode==38 && d !="DOWN" ){ 
         d="UP"
+        up.play();
     }else if(e.keyCode==39 && d !="LEFT" ){ 
+        right.play();
         d="RIGHT"
     }else if(e.keyCode==40 && d !="UP" ){ 
+        down.play();
         d="DOWN"
     }
 }
@@ -89,6 +108,7 @@ function draw(){
     //if the snake eats the food
 
     if(snakeX==food.x && snakeY== food.y){
+        eat.play();
         //increase the score 
         score++
         //generate the food in rrandom location 
@@ -116,18 +136,12 @@ function draw(){
     let newScore=0;
     //detecting the collision of the snake
     if(snakeX < box || snakeX > 17 * box || snakeY < 3*box|| snakeY > 17* box|| collision(newHead, snake)){
-           clearInterval(game);
-           ctx.fillStyle="white";
-           ctx.font="45px Change one"; 
-           ctx.fillText("Game Over",4*box,1.6*box);
-           if(score > bestScore){
-            bestScore= score;
-               
-        }         
-    }
-
-    newScore=bestScore;   
- 
+        dead.play();
+        clearInterval(game);
+        ctx.fillStyle="white";
+        ctx.font="45px Change one"; 
+        ctx.fillText("Game Over",4*box,1.6*box);  
+    } 
     //collision with snake function
 
     function collision(Head, Array){
@@ -140,17 +154,8 @@ function draw(){
 
     }
 
-    ctx.fillStyle="white";
-    ctx.font="45px Change one"; 
-    ctx.fillText(newScore,6*box,1.6*box);
-
-    
-
     //adding the top of the snake 
    snake.unshift(newHead);
-
-    
-
 }
 
 
